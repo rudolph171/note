@@ -1,0 +1,11 @@
+计算viewport缩放比例：（对viewport进行缩放的好处是可以画出1物理像素的边框，例如在dpr为2的设备上，默认1px对应3个物理像素，经过在viewport的1/dpr的缩放后，1px等于1物理像素）
+  通过window.devicePixelRatio获取设备dpr
+    若为安卓设备，设置viewport不缩放（之所以多安卓手机不进行缩放，大部分原因是安卓手机的DPR很不规范，部分安卓手机甚至于不支持viewport的initial-scale不等于1的属性值设置）
+    若为iphone，则根据设备的1/dpr进行缩放，两倍屏缩小到一半，三倍屏缩小到三分之一
+计算html的fontsize：
+  document.documentElement.getBoundingClientRect().width/10，此时document.documentElement.getBoundingClientRect().width获取到的宽度是页面缩放过的viewport宽度。
+计算元素的REM值：
+  元素设计稿中的宽高/当前页面的fontSize（得出的rem值适配于其他屏幕）
+  之所以得出的REM值适配于其他屏幕，主要是在制作页面的时候要将设计稿的宽高/fontSize的比例和实际页面中的计算规则保持一致
+
+考虑到字体的点阵信息，一般文字尺寸多会采用 16px 20px 24px等值，若以rem指定文字尺寸，会产生诸如21px，19px这样的值，会导致字形难看，毛刺，甚至黑块，故大部分文字应该以px设置。
