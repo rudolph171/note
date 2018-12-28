@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div>
+      获取一个禁用项因为哪个项互斥导致禁用，需要确定已选组合与禁用项的组合的所有子集是否为有效的属性组合
+    </div>
+    <script>
+      // 所有属性及属性选项
+      var attrs = {
+          1: [11, 12, 13, 14],
+          2: [21, 22, 23, 24],
+          3: [31, 32, 33, 34],
+          4: [41, 42, 43, 44]
+        },
+        // 有效的属性组合
+        validAttrsCombin = [
+          [11, 22, 33, 44],
+          [11, 21, 31, 44],
+          [12, 21, 33, 44]
+        ],
+        // 当前选中的属性组合
+        currentSelectedAttrs = [11, 22, 33, 44];
+
+      getRejectAttrByAttrId(21, 1);
+
+      function getRejectAttrByAttrId(attrId, attrIndex) {
+        let _ret = [],
+          _tempSelectedAttrs = currentSelectedAttrs.slice(0);
+        _tempSelectedAttrs.splice(attrIndex, 1, attrId);
+
+        // let _arr = getArraySubSet(
+        //   _tempSelectedAttrs,
+        //   0,
+        //   _tempSelectedAttrs.length
+        // );
+        let _arr = getArraySubSet2(
+          _tempSelectedAttrs,
+          _tempSelectedAttrs.length
+        );
+        console.log(_arr.sort((a, b) => a.length - b.length));
+        return _ret;
+      }
+
+      function getArraySubSet(_arr, _idx, _n) {
+        let _ret = [];
+        if (_idx === _n) {
+          _ret.unshift([]);
+        } else {
+          let _tempArr = getArraySubSet(_arr, _idx + 1, _n);
+          let _item = _arr[_idx];
+          for (let i = 0; i < _tempArr.length; i++) {
+            _ret.unshift(_tempArr[i]);
+            let a = [..._tempArr[i]];
+            a.unshift(_item);
+            _ret.unshift(a);
+          }
+        }
+        return _ret;
+      }
+
+      // 使用同数组数量相同的二进制符号位来标识该位置是否存在值
+      function getArraySubSet2(_arr) {
+        let _ret = [],
+          _max = (1 << _arr.length) - 1; // 获取全集时代表十进制值
+        for (let i = 0; i <= _max; i++) {
+          let _subset = [];
+
+          // 若当前数值在每个位置的标识是否为1，若为1，则标识该位置有值
+          for (let j = 0; j < _arr.length; j++) {
+            if (((1 << j) & i) != 0) {
+              _subset.push(_arr[j]);
+            }
+          }
+          _ret.push(_subset);
+        }
+        return _ret;
+      }
+
+      function buildValidAttrsCombinPath() {
+        return Array.map(validAttrsCombin, (item) => {
+          return item.join(',');
+        });
+      }
+    </script>
+  </body>
+</html>
